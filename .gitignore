@@ -1,22 +1,47 @@
-# Logs
-logs
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+backend/dist/
+frontend/dist/
+*.tsbuildinfo
+
+# Runtime data (SQLite)
+backend/data/*.db
+backend/data/*.db-*
+*.sqlite
+*.sqlite3
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs and reports
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+coverage/
+**/coverage/
 
-node_modules
-dist
-dist-ssr
-*.local
+# Tool caches
+.cache/
+.vite/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
