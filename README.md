@@ -23,4 +23,4 @@ npm install
 npm run dev
 ```
 
-Open the frontend URL shown in terminal (usually http://localhost:5173).
+Open the frontend URL shown in terminal (usually http://localhost:3000).
