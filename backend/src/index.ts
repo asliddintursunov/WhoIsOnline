@@ -1,9 +1,9 @@
-import { createServer } from "./app";
+import { createApp } from "./app";
 
 const PORT = 8000
 
 async function main() {
-    const app = createServer();
+    const app = createApp();
 
     app.listen(PORT, () => {
         console.log("=================================");

@@ -1,2 +1,2 @@
-export const findByUsername = () => { }
-export const create = () => { }
+export const findUserByUsername = () => { }
+export const createUser = () => { }

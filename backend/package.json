@@ -2,13 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "app.ts",
+  "main": "dist/src/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "seed": "ts-node-dev --respawn --transpile-only src/scripts/seeds.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node dist/app.js"
+    "start": "node dist/src/index.js"
   },
   "keywords": [],
   "author": "",

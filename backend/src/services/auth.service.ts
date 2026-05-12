@@ -1,4 +1,4 @@
 import { Request, Response } from "express"
 
-export const register = async (req: Request, res: Response) => { }
-export const login = async (req: Request, res: Response) => { }
+export const registerUser = async (req: Request, res: Response) => { }
+export const loginUser = async (req: Request, res: Response) => { }

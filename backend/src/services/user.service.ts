@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
 
-export const getAll = async (req: Request, res: Response) => { }
-export const updateStatus = async (req: Request, res: Response) => { }
-
+export const getUsers = async (req: Request, res: Response) => { }
+export const updateUserStatus = async (req: Request, res: Response) => { }

@@ -1,2 +1,2 @@
-export const getAll = () => { }
-export const update = () => { }
+export const findUsers = () => { }
+export const updateUser = () => { }

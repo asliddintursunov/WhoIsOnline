@@ -4,6 +4,7 @@ dist/
 # Local runtime database files
 data/*.db
 data/*.db-*
+*.db
 
 # Local environment files
 .env
