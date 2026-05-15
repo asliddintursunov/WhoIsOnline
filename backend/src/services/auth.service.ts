@@ -1,18 +1,8 @@
-import jwt from "jsonwebtoken";
 import { createUser, findUserByUsername } from "../repositories";
-import { badRequestError, createRequestSuccess, internalServerError, notFoundError, sendResponse } from "../lib/response";
+import { badRequestError, createRequestSuccess, internalServerError, notFoundError, sendResponse, successRequest } from "../lib/response";
 import { Response } from "express";
 import { checkPasswordMatch, passwordHasher } from "../lib/helpers";
-
-const JWT_SECRET_KEY = "bbae8f5570d77b6c1870aa647f2cae8c"
-const JWT_EXPIRES_IN = "72h"
-
-const generateToken = (payload: Record<string, string>) => {
-    const token = jwt.sign(payload, JWT_SECRET_KEY, {
-        expiresIn: JWT_EXPIRES_IN,
-    });
-    return token;
-};
+import { generateToken } from "../lib/jwt";
 
 
 export const registerUser = async (res: Response, username: string, password: string) => {
@@ -51,16 +41,15 @@ export const loginUser = async (res: Response, username: string, password: strin
     const doesPasswordMatch = await checkPasswordMatch(password, user.password)
 
     if (!doesPasswordMatch) {
-        sendResponse(res, {
+        return sendResponse(res, {
             ...badRequestError,
             message: "Incorrect username or password! Please try again!"
         })
     }
 
-    const { password: userPassword, ...userData } = user
-    const token = generateToken({ id: userData.id, username: userData.username })
+    const token = generateToken({ id: user.id, username: user.username })
     return sendResponse(res, {
-        ...createRequestSuccess,
+        ...successRequest,
         message: "User logged in successfully!",
         data: { token }
     })

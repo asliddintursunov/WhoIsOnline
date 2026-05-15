@@ -15,9 +15,7 @@ export const registerController = async (req: Request, res: Response) => {
         })
     }
 
-    const registerData = await registerUserService(res, data.username, data.password)
-
-
+    return registerUserService(res, data.username, data.password)
 }
 
 export const loginController = async (req: Request, res: Response) => {
@@ -31,11 +29,5 @@ export const loginController = async (req: Request, res: Response) => {
         })
     }
 
-    const loginData = await loginUserService(res, data.username, data.password)
-
-    return sendResponse(res, {
-        code: 200,
-        message: "Login success",
-        data,
-    })
+    return loginUserService(res, data.username, data.password)
 }
