@@ -1,35 +1,36 @@
 import { Response } from "express";
+const ONLINE_USERS = new Map<string, Set<Response>>();
 
-const getClientsIdList = (clients: Map<string, Set<Response>>): string[] => Array.from(clients.keys())
+const getClientsIdList = (): string[] => Array.from(ONLINE_USERS.keys())
 
-const broadcast = (clientsIdList: string[], clients: Map<string, Set<Response>>) => {
+const broadcast = (clientsIdList: string[]) => {
     const data = `data: ${JSON.stringify(clientsIdList)}\n\n`
-    for (const [, connections] of clients) {
+    for (const [, connections] of ONLINE_USERS) {
         for (const res of connections) {
             res.write(data);
         }
     }
 }
 
-export const addClient = (userId: string, res: Response, clients: Map<string, Set<Response>>) => {
-    const isNewUser = !clients.has(userId);
-    if (isNewUser) clients.set(userId, new Set());
+export const addClient = (userId: string, res: Response) => {
+    const isNewUser = !ONLINE_USERS.has(userId);
+    if (isNewUser) ONLINE_USERS.set(userId, new Set());
 
-    clients.get(userId)!.add(res);
+    ONLINE_USERS.get(userId)!.add(res);
 
-    if (isNewUser) broadcast(getClientsIdList(clients), clients);
+    if (isNewUser) broadcast(getClientsIdList());
 }
 
-export const removeClient = (userId: string, res: Response, clients: Map<string, Set<Response>>) => {
-    const userConnections = clients.get(userId);
+export const removeClient = (userId: string, res: Response) => {
+    const userConnections = ONLINE_USERS.get(userId);
 
     if (!userConnections) return;
 
     userConnections.delete(res);
 
     if (userConnections.size === 0) {
-        clients.delete(userId);
+        ONLINE_USERS.delete(userId);
     }
 
-    broadcast(getClientsIdList(clients), clients)
+    broadcast(getClientsIdList())
 }

@@ -4,8 +4,6 @@ import { verifyToken } from "../lib/jwt";
 import { sendResponse, unauthorizedError } from "../lib/response";
 import { addClient, removeClient } from "../repositories/sse.repository";
 
-const ONLINE_USERS = new Map<string, Set<Response>>();
-
 export const addOnlineUser = async (req: Request, res: Response) => {
     const token = getBearerToken(req.headers.authorization);
     if (!token) return sendResponse(res, unauthorizedError);
@@ -18,6 +16,6 @@ export const addOnlineUser = async (req: Request, res: Response) => {
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders();
 
-    addClient(user.id, res, ONLINE_USERS);
-    req.on('close', () => removeClient(user.id, res, ONLINE_USERS));
+    addClient(user.id, res);
+    req.on('close', () => removeClient(user.id, res));
 };
