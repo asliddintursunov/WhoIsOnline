@@ -3,7 +3,7 @@ import { TokenExpiredError } from "jsonwebtoken";
 import { unauthorizedError, sendResponse } from "../lib/response";
 import { verifyToken } from "../lib/jwt";
 
-const getBearerToken = (authorizationHeader?: string): string | null => {
+export const getBearerToken = (authorizationHeader?: string): string | null => {
     const [scheme, token, ...extraParts] = authorizationHeader?.trim().split(/\s+/) ?? [];
 
     if (scheme?.toLowerCase() !== "bearer" || !token || extraParts.length > 0) {
