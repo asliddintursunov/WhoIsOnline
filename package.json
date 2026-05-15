@@ -1,0 +1,13 @@
+{
+  "name": "whoisonline-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix backend run dev",
+    "build": "npm --prefix backend run build",
+    "start": "npm --prefix backend run start",
+    "prisma:generate": "npm --prefix backend run prisma:generate",
+    "prisma:studio": "npm --prefix backend run prisma:studio",
+    "prisma:migrate": "npm --prefix backend run prisma:migrate"
+  }
+}
