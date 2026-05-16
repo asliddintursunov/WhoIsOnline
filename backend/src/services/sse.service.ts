@@ -1,8 +1,9 @@
 import { Response, Request } from "express";
 import { getBearerToken } from "../middlewares"
 import { verifyToken } from "../lib/jwt";
-import { sendResponse, unauthorizedError } from "../lib/response";
-import { addClient, removeClient } from "../repositories/sse.repository";
+import { internalServerError, sendResponse, unauthorizedError } from "../lib/response";
+import { updateConnection } from "../repositories/sse.repository";
+import { updateUserLastOnlineService } from "./user.service";
 
 export const addOnlineUser = async (req: Request, res: Response) => {
     const token = getBearerToken(req.headers.authorization);
@@ -16,6 +17,14 @@ export const addOnlineUser = async (req: Request, res: Response) => {
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders();
 
-    addClient(user.id, res);
-    req.on('close', () => removeClient(user.id, res));
+    try {
+        updateConnection(user.id, res, "connect");
+        req.on('close', async () => {
+            updateConnection(user.id, res, "disconnect")
+            await updateUserLastOnlineService(req, res)
+        });
+    }
+    catch (error: any) {
+        sendResponse(res, internalServerError)
+    }
 };

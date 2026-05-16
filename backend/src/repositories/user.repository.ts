@@ -9,5 +9,17 @@ export const findUserByUsername = async (username: string): Promise<User | null>
     })
     return user
 }
-export const getAllUsers = () => { }
-export const updateUser = () => { }
+export const getAllUsers = async (): Promise<Omit<User, "password">[]> => {
+    const users = await prisma.user.findMany({
+        select: {
+            id: true,
+            username: true,
+            createdAt: true,
+            lastOnline: true
+        }
+    })
+    return users
+}
+export const updateUserLastOnline = async (id: string, data: Pick<User, "lastOnline">) => {
+    await prisma.user.update({ where: { id }, data })
+}
