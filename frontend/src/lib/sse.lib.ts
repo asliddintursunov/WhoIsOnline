@@ -33,10 +33,8 @@
 //     eventSource = null;
 // }
 
-let controller: AbortController | null = null;
+// let controller: AbortController | null = null;
 
-export async function connectEvent() {
-    controller = new AbortController();
-
-
-}
+// export async function connectEvent() {
+//     controller = new AbortController();
+// }

@@ -12,30 +12,50 @@ const DashboardPage = lazy(() => import("./pages/Dashboard"));
 
 function App() {
   const location = useLocation();
-  const { setUsers } = useOnlineUsersStore();
+  const authToken = token("get");
+  const isAuthPage = [PATH.LOGIN, PATH.REGISTER].includes(location.pathname);
+  const setUsers = useOnlineUsersStore((state) => state.setUsers);
+  const setAmIOnline = useOnlineUsersStore((state) => state.setAmIOnline);
 
   useEffect(() => {
-    if (![PATH.REGISTER, PATH.LOGIN].includes(location.pathname)) {
-      fetchEventSource(`${BASE_URL}${API_ENDPIINTS.EVENTS.ONLINE_USERS}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token("get")}`,
-        },
-        onmessage(event) {
-          const data: OnlineUser[] = JSON.parse(event.data);
-          setUsers(data);
-        },
-        onerror(error) {
-          console.error(error);
-        },
-        onclose() {
-          console.log("Connection closed");
-        },
-      });
+    if (!authToken || isAuthPage) {
+      setUsers([]);
+      setAmIOnline(false);
+      return;
     }
 
-    return () => {};
-  }, [location]);
+    const controller = new AbortController();
+
+    void fetchEventSource(`${BASE_URL}${API_ENDPIINTS.EVENTS.ONLINE_USERS}`, {
+      method: "GET",
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+      onmessage(event) {
+        const data: OnlineUser[] = JSON.parse(event.data);
+        setUsers(data);
+        setAmIOnline(true);
+      },
+      onerror(error) {
+        if (!controller.signal.aborted) {
+          console.error(error);
+        }
+      },
+      onclose() {
+        setAmIOnline(false);
+      },
+    }).catch((error) => {
+      if (!controller.signal.aborted) {
+        console.error(error);
+      }
+    });
+
+    return () => {
+      controller.abort();
+      setAmIOnline(false);
+    };
+  }, [authToken, isAuthPage, setAmIOnline]);
 
   return (
     <Routes>

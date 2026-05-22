@@ -1,9 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { token } from "../../lib/helpers.lib";
+import { useOnlineUsersStore } from "../../store/onlineUsers";
 
 export default function Nav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { reset } = useOnlineUsersStore();
 
   const linkClass = (path: string) =>
     `px-3 py-2 rounded-md text-sm font-medium ${
@@ -28,6 +30,7 @@ export default function Nav() {
             <button
               onClick={() => {
                 token("clear");
+                reset();
                 navigate("/login");
               }}
               className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:text-red-800"

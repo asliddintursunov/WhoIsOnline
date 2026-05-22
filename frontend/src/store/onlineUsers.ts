@@ -1,19 +1,23 @@
 import { create } from "zustand";
 
 export type OnlineUser = {
-    userId: string;
-    isOnline: boolean;
-    lastSeenAt: string;
+  id: string;
+  isOnline: boolean;
+  lastSeenAt: string | null;
 };
 
 type OnlineUsersStore = {
-    users: OnlineUser[];
-    setUsers: (users: OnlineUser[]) => void;
-    getUsers: () => OnlineUser[];
+  users: OnlineUser[];
+  setUsers: (users: OnlineUser[]) => void;
+  amIOnline: boolean;
+  setAmIOnline: (status: boolean) => void;
+  reset: () => void;
 };
 
-export const useOnlineUsersStore = create<OnlineUsersStore>((set, get) => ({
-    users: [],
-    setUsers: (users) => set({ users }),
-    getUsers: () => get().users,
+export const useOnlineUsersStore = create<OnlineUsersStore>((set) => ({
+  users: [],
+  setUsers: (users) => set({ users }),
+  amIOnline: false,
+  setAmIOnline: (status) => set({ amIOnline: status }),
+  reset: () => set({ users: [], amIOnline: false }),
 }));

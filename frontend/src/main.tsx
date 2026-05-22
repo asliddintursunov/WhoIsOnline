@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
@@ -7,11 +6,9 @@ import Nav from "./components/nav/index.tsx";
 import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Nav />
-      <App />
-      <Toaster position="top-center" reverseOrder={false} />
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <Nav />
+    <App />
+    <Toaster position="top-center" reverseOrder={false} />
+  </BrowserRouter>,
 );

@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { useOnlineUsersStore } from "../../store/onlineUsers";
 
 export default function DashboardPage() {
   const { users } = useOnlineUsersStore();
 
-  console.log({ users });
+  useEffect(() => {
+    console.log({ users });
+  }, [users]);
 
   return (
     <main className="min-h-screen px-6 py-10 text-slate-900 sm:px-10 lg:px-16">
