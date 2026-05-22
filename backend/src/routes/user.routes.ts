@@ -6,6 +6,6 @@ const userRoutes = Router();
 
 userRoutes.use(authMiddleware);
 
-userRoutes.post("/users", getUsersController);
+userRoutes.get("/users", getUsersController);
 
 export default userRoutes;
