@@ -3,7 +3,6 @@ import { getBearerToken } from "../middlewares"
 import { verifyToken } from "../lib/jwt";
 import { internalServerError, sendResponse, unauthorizedError } from "../lib/response";
 import { updateConnection } from "../repositories/sse.repository";
-import { updateUserLastOnlineService } from "./user.service";
 
 export const addOnlineUser = async (req: Request, res: Response) => {
     const token = getBearerToken(req.headers.authorization);
@@ -18,10 +17,11 @@ export const addOnlineUser = async (req: Request, res: Response) => {
     res.flushHeaders();
 
     try {
-        updateConnection(user.id, res, "connect");
-        req.on('close', async () => {
-            updateConnection(user.id, res, "disconnect")
-            await updateUserLastOnlineService(req, res)
+        await updateConnection(user.id, res, "connect");
+        req.on('close', () => {
+            void updateConnection(user.id, res, "disconnect").catch((error) => {
+                console.error("Failed to handle SSE disconnect", error);
+            });
         });
     }
     catch (error: any) {

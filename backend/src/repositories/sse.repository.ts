@@ -4,13 +4,13 @@ import { updateUserLastOnline } from "./user.repository";
 type OnlineClientsListType = {
     id: string,
     lastSeenAt: Date | null,
-    isOnline: Boolean
+    isOnline: boolean
 }
 
 const ONLINE_USERS = new Map<
     string,
     {
-        isOnline: Boolean,
+        isOnline: boolean,
         connections: Set<Response>;
         lastSeenAt: Date | null;
     }
@@ -33,13 +33,13 @@ const broadcast = (onlineClientsList: OnlineClientsListType[]) => {
     }
 }
 
-export const updateConnection = (userId: string, res: Response, type: "connect" | "disconnect") => {
+export const updateConnection = async (userId: string, res: Response, type: "connect" | "disconnect") => {
     switch (type) {
         case "connect":
             connectUser(userId, res)
             break;
         case "disconnect":
-            disconnectUser(userId, res)
+            await disconnectUser(userId, res)
             break
         default:
             break;
@@ -81,11 +81,9 @@ const disconnectUser = async (userId: string, res: Response) => {
     }
 
     const lastSeenAt = new Date();
-
-    user.isOnline = false;
-    user.lastSeenAt = lastSeenAt;
-
-    await updateUserLastOnline(userId, { lastOnline: lastSeenAt });
+    ONLINE_USERS.delete(userId);
 
     broadcast(getOnlineClientsList());
+
+    await updateUserLastOnline(userId, { lastOnline: lastSeenAt });
 };
