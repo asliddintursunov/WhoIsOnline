@@ -29,6 +29,7 @@ function App() {
     void fetchEventSource(`${BASE_URL}${API_ENDPIINTS.EVENTS.ONLINE_USERS}`, {
       method: "GET",
       signal: controller.signal,
+      openWhenHidden: true,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -55,7 +56,7 @@ function App() {
       controller.abort();
       setAmIOnline(false);
     };
-  }, [authToken, isAuthPage, setAmIOnline]);
+  }, [authToken, isAuthPage, setUsers, setAmIOnline]);
 
   return (
     <Routes>
