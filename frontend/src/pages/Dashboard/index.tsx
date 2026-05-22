@@ -1,30 +1,7 @@
-import { useEffect, useState } from "react";
 import { useOnlineUsers } from "../../store/onlineUsers";
-import { useApi } from "../../hooks/useApi";
-
-type Users = {
-  id: string;
-  username: string;
-  password: string;
-  is_online: 0 | 1;
-  created_at: Date;
-};
 
 export default function DashboardPage() {
   const onlineUsers = useOnlineUsers();
-  const { get } = useApi<Users[]>();
-
-  const [users, setUsers] = useState<Users[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await get("/users");
-      setUsers(data || []);
-    })();
-  }, []);
-
-  console.log("onlineUsers", onlineUsers);
-  console.log("users", users);
 
   return (
     <main className="min-h-screen px-6 py-10 text-slate-900 sm:px-10 lg:px-16">
@@ -49,7 +26,7 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
-              {users.map((user) => (
+              {/* {users.map((user) => (
                 <tr key={user.username} className="hover:bg-slate-50/80">
                   <td className="px-6 py-4 font-medium text-slate-950">
                     {user.username}
@@ -63,7 +40,7 @@ export default function DashboardPage() {
                   </td>
                   <td className="px-6 py-4">{String(user.created_at)}</td>
                 </tr>
-              ))}
+              ))} */}
             </tbody>
           </table>
         </div>

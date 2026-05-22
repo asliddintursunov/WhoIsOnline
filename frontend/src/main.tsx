@@ -4,12 +4,14 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
 import Nav from "./components/nav/index.tsx";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Nav />
       <App />
+      <Toaster position="top-center" reverseOrder={false} />
     </BrowserRouter>
   </StrictMode>,
 );

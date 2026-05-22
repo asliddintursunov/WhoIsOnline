@@ -1,6 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { clearUserData, getUserData } from "../../lib/helpers";
-import { disconnectSocket } from "../../lib/socket";
+import { token } from "../../lib/helpers.lib";
 
 export default function Nav() {
   const location = useLocation();
@@ -13,7 +12,7 @@ export default function Nav() {
         : "text-gray-700 hover:text-gray-900"
     }`;
 
-  return getUserData() ? (
+  return token("get") ? (
     <nav className="bg-blue-100 shadow">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex justify-between h-16 items-center">
@@ -28,8 +27,7 @@ export default function Nav() {
           <div>
             <button
               onClick={() => {
-                clearUserData();
-                disconnectSocket();
+                token("clear");
                 navigate("/login");
               }}
               className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:text-red-800"

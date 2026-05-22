@@ -1,36 +1,30 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useApi } from "../../hooks/useApi";
-import { setUserData } from "../../lib/helpers";
-import { connectSocket } from "../../lib/socket";
 
-type LoginResponse = {
-  id: string;
-  username: string;
-  password: string;
-  is_online: boolean;
-  created_at: Date;
-};
+import { API_ENDPIINTS, PATH } from "../../constants";
+import { useApi } from "../../hooks";
+import toast from "react-hot-toast";
+import { token } from "../../lib/helpers.lib";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", password: "" });
-  const { isLoading, post } = useApi<LoginResponse>();
+  const { isLoading, post } = useApi<{ token: string }>();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = await post("/login", form);
+    const result = await post(API_ENDPIINTS.AUTH.LOGIN, form);
 
     if (result.error) {
-      alert(`Login failed: ${result.error}`);
+      toast.error(result.error);
       return;
     }
 
     if (result.data) {
-      connectSocket(result.data.id);
-      setUserData(result.data);
-      navigate("/");
+      toast.success(result.message);
+      token("set", result.data.token);
+      navigate(PATH.HOME);
     }
   }
 
@@ -48,9 +42,6 @@ export default function LoginPage() {
             <h1 className="text-3xl font-semibold tracking-tight text-slate-950">
               Login
             </h1>
-            <p className="text-sm text-slate-500">
-              Use any mock credentials to continue.
-            </p>
           </div>
 
           <div className="mt-8 space-y-5">
