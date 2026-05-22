@@ -9,12 +9,15 @@ import { token } from "../../lib/helpers.lib";
 export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", password: "" });
-  const { isLoading, post } = useApi<{ token: string }>();
+  const { isLoading, post } = useApi();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = await post(API_ENDPIINTS.AUTH.LOGIN, form);
+    const result = await post<{ token: string }>(
+      API_ENDPIINTS.AUTH.LOGIN,
+      form,
+    );
 
     if (result.error) {
       toast.error(result.error);

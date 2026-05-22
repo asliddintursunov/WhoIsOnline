@@ -3,7 +3,9 @@ export function token(action: "get" | "set" | "clear", value?: string): string |
         case "get":
             return localStorage.getItem("token") || "";
         case "set":
-            localStorage.setItem("token", JSON.stringify(value));
+            if (value) {
+                localStorage.setItem("token", value);
+            }
             break;
         case "clear":
             localStorage.removeItem("token");

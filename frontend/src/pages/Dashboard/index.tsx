@@ -1,7 +1,9 @@
-import { useOnlineUsers } from "../../store/onlineUsers";
+import { useOnlineUsersStore } from "../../store/onlineUsers";
 
 export default function DashboardPage() {
-  const onlineUsers = useOnlineUsers();
+  const { users } = useOnlineUsersStore();
+
+  console.log({ users });
 
   return (
     <main className="min-h-screen px-6 py-10 text-slate-900 sm:px-10 lg:px-16">

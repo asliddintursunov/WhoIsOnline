@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import axios, { AxiosError, type Method } from "axios";
 import { BASE_URL } from "../constants";
+import { token } from "../lib/helpers.lib";
 
 type ApiState<T> = {
     data: T | null;
@@ -38,6 +39,10 @@ export function useApi<Default = unknown>() {
                     method,
                     url: `${BASE_URL}${endpoint}`,
                     data: payload,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token("get")}`
+                    }
                 });
 
                 setState({
