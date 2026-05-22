@@ -4,9 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { API_ENDPIINTS, PATH } from "../../constants";
 import { useApi } from "../../hooks";
 import toast from "react-hot-toast";
-import { token } from "../../lib/helpers.lib";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", password: "" });
   const { isLoading, post } = useApi();
@@ -14,21 +13,15 @@ export default function LoginPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = await post<{ token: string }>(
-      API_ENDPIINTS.AUTH.LOGIN,
-      form,
-    );
+    const result = await post(API_ENDPIINTS.AUTH.REGISTER, form);
 
     if (result.error) {
       toast.error(result.error);
       return;
     }
 
-    if (result.data) {
-      toast.success(result.message);
-      token("set", result.data.token);
-      navigate(PATH.HOME);
-    }
+    toast.success(result.message);
+    navigate(PATH.LOGIN);
   }
 
   return (
@@ -43,7 +36,7 @@ export default function LoginPage() {
               WhoIsOnline
             </p>
             <h1 className="text-3xl font-semibold tracking-tight text-slate-950">
-              Login
+              Register
             </h1>
           </div>
 
@@ -76,15 +69,15 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-xl bg-sky-600 px-4 py-3 font-semibold text-white transition hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-xl bg-sky-600 px-4 py-3 font-semibold text-white transition hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLoading ? "Logging in..." : "Login"}
+              {isLoading ? "Registering..." : "Register"}
             </button>
 
             <p className="text-center text-sm text-slate-500">
-              Don't have an account?{" "}
-              <Link className="font-semibold text-sky-600" to={PATH.REGISTER}>
-                Register
+              Already have an account?{" "}
+              <Link className="font-semibold text-sky-600" to={PATH.LOGIN}>
+                Login
               </Link>
             </p>
           </div>

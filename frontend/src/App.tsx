@@ -2,12 +2,15 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { API_ENDPIINTS, BASE_URL, PATH } from "./constants";
 import { lazy, useEffect } from "react";
 
+import { AuthRoute, LAST_PRIVATE_PATH_KEY } from "./routes/AuthRoute";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { token } from "./lib/helpers.lib";
 import { useOnlineUsersStore, type OnlineUser } from "./store/onlineUsers";
 
 const HomePage = lazy(() => import("./pages/Home"));
 const LoginPage = lazy(() => import("./pages/Login"));
+const RegisterPage = lazy(() => import("./pages/Register"));
 const DashboardPage = lazy(() => import("./pages/Dashboard"));
 
 function App() {
@@ -18,7 +21,13 @@ function App() {
   const setAmIOnline = useOnlineUsersStore((state) => state.setAmIOnline);
 
   useEffect(() => {
-    if (!authToken || isAuthPage) {
+    if (authToken && !isAuthPage) {
+      sessionStorage.setItem(LAST_PRIVATE_PATH_KEY, location.pathname);
+    }
+  }, [authToken, isAuthPage, location.pathname]);
+
+  useEffect(() => {
+    if (!authToken) {
       setUsers([]);
       setAmIOnline(false);
       return;
@@ -56,13 +65,18 @@ function App() {
       controller.abort();
       setAmIOnline(false);
     };
-  }, [authToken, isAuthPage, setUsers, setAmIOnline]);
+  }, [authToken, setUsers, setAmIOnline]);
 
   return (
     <Routes>
-      <Route path={PATH.HOME} element={<HomePage />} />
-      <Route path={PATH.LOGIN} element={<LoginPage />} />
-      <Route path={PATH.DASHBOARD} element={<DashboardPage />} />
+      <Route element={<AuthRoute />}>
+        <Route path={PATH.LOGIN} element={<LoginPage />} />
+        <Route path={PATH.REGISTER} element={<RegisterPage />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path={PATH.HOME} element={<HomePage />} />
+        <Route path={PATH.DASHBOARD} element={<DashboardPage />} />
+      </Route>
     </Routes>
   );
 }
